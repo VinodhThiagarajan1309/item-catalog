@@ -44,22 +44,20 @@ categories = select([Category])
 cur_categories = session.execute(categories)
 master=[]
 dict_master = {}
-for category in cur_categories:
+for category in session.query(Category):
+	print category.serialize
 	dict_cat = {}
 	dict_cat["id"] = category.id
 	dict_cat["name"] = category.name
 	items = session.query(Item).filter_by(category_id=category.id)
-	cur_item = session.execute(items)
+	cur_item = session.execute(items).fetchall()
 	lst_items_for_this_cat = []
-	for item in cur_item:
-		dict_item = {}
-		dict_item["cat_id"] = category.id
-		dict_item["description"] = item[2]
-		dict_item["id"] = item[1]
-		dict_item["title"] = item[0]
-		lst_items_for_this_cat.append(dict_item)
+	for item in session.query(Item).filter_by(category_id=category.id):
+		print item.serialize
+		
+		lst_items_for_this_cat.append(item.serialize)
 	dict_cat["items"] = lst_items_for_this_cat
-	master.append(dict_cat)
+	master.append(category.serialize)
 dict_master["Category"] = master
 print dict_master
 # s = (session.query(Category.id , Category.name , Item.category_id ,  Item.description , Item.id,Item.title  )

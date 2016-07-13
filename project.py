@@ -157,40 +157,16 @@ def gdisconnect():
 # JSON APIs to view Restaurant Information
 @app.route('/catalog/JSON')
 def catalogJSON():
-    categories = select([Category])
-    cur_categories = session.execute(categories)
     lst_category=[]
-    for category in cur_categories:
-        dict_cat = OrderedDict()
-        dict_cat["id"] = category.id
-        dict_cat["name"] = category.name
-        items = session.query(Item).filter_by(category_id=category.id)
-        cur_item = session.execute(items)
+    for category in session.query(Category):
+        dict_serialized_category = category.serialize
         lst_items_for_this_cat = []
-        for item in cur_item:
-            dict_item = {}
-            dict_item["cat_id"] = category.id
-            dict_item["description"] = item[2]
-            dict_item["id"] = item[1]
-            dict_item["title"] = item[0]
-            lst_items_for_this_cat.append(dict_item)
+        for item in session.query(Item).filter_by(category_id=category.id):
+            lst_items_for_this_cat.append(item.serialize)
         if(len(lst_items_for_this_cat) > 0):
-            dict_cat["Item"] = lst_items_for_this_cat
-        lst_category.append(dict_cat)
-    return jsonify(Category=[lst_category])
-
-
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def menuItemJSON(restaurant_id, menu_id):
-    Menu_Item = session.query(MenuItem).filter_by(id=menu_id).one()
-    return jsonify(Menu_Item=Menu_Item.serialize)
-
-
-@app.route('/restaurant/JSON')
-def restaurantsJSON():
-    restaurants = session.query(Restaurant).all()
-    return jsonify(restaurants=[r.serialize for r in restaurants])
-
+            dict_serialized_category["Item"] = lst_items_for_this_cat
+        lst_category.append(dict_serialized_category)
+    return jsonify(Category=lst_category)
 
 # Show all restaurants
 @app.route('/')

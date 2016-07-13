@@ -2,6 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from collections import OrderedDict
 
 Base = declarative_base()
 
@@ -26,10 +27,10 @@ class Category(Base):
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
-        return {
-            'name': self.name,
-            'id': self.id,
-        }
+        ordered_cat = OrderedDict()
+        ordered_cat["id"] = self.id
+        ordered_cat["name"] = self.name
+        return ordered_cat
 
 
 class Item(Base):
@@ -46,13 +47,12 @@ class Item(Base):
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
-        return {
-            'cat_id':self.category_id,
-            'title': self.title,
-            'description': self.description,
-            'id': self.id,
-        }
-
+        ordered_item = OrderedDict()
+        ordered_item["cat_id"] = self.category_id
+        ordered_item["description"] = self.description
+        ordered_item["id"] = self.id
+        ordered_item["title"] = self.title
+        return ordered_item
 
 engine = create_engine('sqlite:///itemcatalog.db')
 

@@ -1,0 +1,22 @@
+.brandName{
+	color: #6c9819;
+}
+
+.loginUL{
+	background-color: #6c9819;
+}
+
+table a:not(.btn), .table a:not(.btn) {
+    color: #fff;
+    text-decoration: none;
+}
+
+.belongsToCat{
+	color: #fff;
+	font-size: .70em;
+	font-style: italic;
+}
+
+.error{
+	color: red;
+}

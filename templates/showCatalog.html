@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+   {% if categories %}
+   <div class="row">
+      <div class="col-xs-4">
+         <table class="table  table-hover categTable text-center">
+            <thead >
+               <tr>
+                  <th class="text-center" >
+                     <h3 class="text-info">Categories</h3>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for category in categories %}
+               <tr>
+                  <td>
+                     <a href="{{url_for('showCategoryItems', category_name = category.name)}}">
+                        <h5 class="text-warning">{{category.name}}</h5>
+                     </a>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+      <div class="col-xs-8">
+         {% if latestItems %}
+         <table class="table  table-hover categTable text-center">
+            <thead >
+               <tr>
+                  <th class="text-center" >
+                     <h3 class="text-info">Latest Items</h3>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for item in latestItems %}
+               <tr>
+                  <td>
+                     <a href="{{ url_for('showCategoryItemDetailed' , category_name = item.category.name , item_name = item.title)}}">
+                        <h5 class="text-warning">{{item.title}}<span class="belongsToCat"> [ {{item.category.name}} ]</span></h5>
+                     </a>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         {% endif %}
+      </div>
+   </div>
+   {% else %}
+   <div class="row">
+      <div class="col-xs-12">
+         <h2>No Categories in the system yet. Create one now !</h2>
+         <a class="btn btn-success" href="{{ url_for('newCategory')}}">Create Category</a>
+      </div>
+   </div>
+   {% endif %}
+</div>
+{% endblock %}

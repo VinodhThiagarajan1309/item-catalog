@@ -7,6 +7,7 @@ from collections import OrderedDict
 Base = declarative_base()
 
 
+# Holds User Information
 class User(Base):
     __tablename__ = 'user'
 
@@ -16,6 +17,7 @@ class User(Base):
     picture = Column(String(250))
 
 
+# Holds Category Information
 class Category(Base):
     __tablename__ = 'category'
 
@@ -24,6 +26,7 @@ class Category(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
+    # Serialized object creation
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -32,7 +35,7 @@ class Category(Base):
         ordered_cat["name"] = self.name
         return ordered_cat
 
-
+# Holds Item Details
 class Item(Base):
     __tablename__ = 'item'
 
@@ -44,6 +47,7 @@ class Item(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
+    # Serialized object creation
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -52,6 +56,8 @@ class Item(Base):
         ordered_item["description"] = self.description
         ordered_item["id"] = self.id
         ordered_item["title"] = self.title
+        ordered_item["owner"] = self.user.email
+        ordered_item["user_id"] = self.user.id
         return ordered_item
 
 engine = create_engine('sqlite:///itemcatalog.db')

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+   {% if categories %}
+   <div class="row">
+      <div class="col-xs-4">
+         <table class="table  table-hover categTable text-center">
+            <thead >
+               <tr>
+                  <th class="text-center" >
+                     <h3 class="text-info">Categories</h3>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for category in categories %}
+               <tr class="{{category.id}}">
+                  <td>
+                     <a href="{{url_for('showCategoryItems', category_name = category.name)}}">
+                        <h5 class="text-warning ">{{category.name}}</h5>
+                     </a>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+      <div class="col-xs-8">
+         {% if categoryItems and categoryItems.count() > 0 %}
+         <table class="table  table-hover categTable text-center">
+            <thead >
+               <tr>
+                  <th class="text-center" >
+                     <h3 id="{{categoryItems[0].category.id}}" class="currentCategory" class="text-info">{{categoryItems[0].category.name}}<span class="belongsToCat"> [{{categoryItems.count()}} items]</span></h3>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for item in categoryItems %}
+               <tr>
+                  <td>
+                     <a href="{{ url_for('showCategoryItemDetailed' , category_name = item.category.name , item_name = item.title)}}">
+                        <h5 class="text-warning">{{item.title}}</h5>
+                     </a>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         <div class="container">
+            <div class="row">
+               <div class="col-md-offset-3 col-md-8"> <a class="btn btn-md btn-info" href="{{url_for('newItem')}}"> Add Item
+                  </a>
+               </div>
+            </div>
+         </div>
+         {% elif not warnedFlash %}
+         <div class="row">
+            <div class="col-xs-8">
+               <div class="alert alert-dismissible alert-warning">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p> No items exists for this category.  <a class="btn btn-info btn-xs" href="{{url_for('newItem')}}">Create </a>  an item for this category now.</p>
+               </div>
+            </div>
+         </div>
+         {% endif %}
+      </div>
+   </div>
+   {% endif %}
+</div>
+{% endblock %}

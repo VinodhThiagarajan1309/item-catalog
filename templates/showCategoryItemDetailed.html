@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+   <div class="row">
+      <div class="col-md-offset-3 col-md-6">
+         {% if itemDetail %}
+         <h2 class="text-warning">{{itemDetail.title}}</h2>
+         <hr>
+         <p>
+            {{itemDetail.description}}
+         </p>
+         <br>
+         <hr>
+          {% if isItemOwner %}
+         <a class="btn btn-xs btn-warning" href="{{url_for('editItem',item_name=itemDetail.title)}}">Edit</a> <span>  |  </span> <button class="btn btn-xs btn-danger"  data-toggle="modal" data-target="#deleteModal">Delete</button>
+         {% endif %}
+         <!-- Button trigger modal -->
+         <!-- Modal -->
+         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel">Delete Item</h4>
+                  </div>
+                  <div class="modal-body">
+                     Do you want to delete this item ?
+                  </div>
+                  <form action="{{url_for('deleteItem',item_name=itemDetail.title)}}" method="POST">
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     <input type="hidden" name="itemId" value="{{itemDetail.id}}">
+                     <button class="btn btn-danger">Delete Item</a>
+                  </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+         {% else %}
+         <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <p> No such item exists.Visit <a class="btn btn-info btn-xs" href="{{url_for('showCatalog')}}">Catalog Home</a>  for more items.</p>
+         </div>
+         {% endif%}
+      </div>
+   </div>
+</div>
+{% endblock %}

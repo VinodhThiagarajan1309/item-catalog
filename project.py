@@ -16,6 +16,7 @@ import string
 from collections import OrderedDict
 
 app = Flask(__name__)
+app.secret_key = 'why would I tell you my secret key?'
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -235,6 +236,15 @@ def newCategory():
 # Display items for the given category
 @app.route('/catalog/<string:category_name>/items/')
 def showCategoryItems(category_name):
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                for x in xrange(32))
+    login_session['state'] = state
+    picture = ''
+    if 'picture' in login_session:
+        picture = login_session['picture']
+    else:
+        picture = None
+
     categories = session.query(Category).order_by(asc(Category.name))
     try:
         category = session.query(Category).filter_by(name=category_name).one()
@@ -243,7 +253,9 @@ def showCategoryItems(category_name):
         return render_template(
             'showCategoryItems.html',
             categories=categories,
-            categoryItems=categoryItems)
+            categoryItems=categoryItems,
+            STATE=state,
+            picture=picture)
     except NoResultFound, e:
         flash(
             'No category named %s  exists.' +
@@ -251,7 +263,9 @@ def showCategoryItems(category_name):
         return render_template(
             'showCategoryItems.html',
             categories=categories,
-            warnedFlash=True)
+            warnedFlash=True,
+            STATE=state,
+            picture=picture)
 
 
 # Show detailed item view
@@ -405,7 +419,7 @@ def handydeleteUsers():
 
 @app.route('/deleteAllCategories')
 def handydeleteCat():
-    itemToDelete = session.query(User)
+    itemToDelete = session.query(Category)
     for item in itemToDelete:
         session.delete(item)
         session.commit()
@@ -414,11 +428,12 @@ def handydeleteCat():
 
 @app.route('/deleteAllItems')
 def handydeleteItems():
-    itemToDelete = session.query(User)
+    itemToDelete = session.query(Item)
     for item in itemToDelete:
         session.delete(item)
         session.commit()
     return 'Deleted All Items'
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

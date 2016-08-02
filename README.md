@@ -2,7 +2,7 @@
 
 ## Applicationb Demo Link
 
-  [Demo Link - Hosted using PythinAnyWhere.com](http://vinfosys9677.pythonanywhere.com/)
+  [Demo Link - Hosted using PythonAnyWhere.com](http://vinfosys9677.pythonanywhere.com/)
   
 ## About the application
 
